@@ -1,0 +1,38 @@
+.tab {
+    overflow: hidden;
+    background-color: #fefefe;
+    border-radius: 8px;
+}
+
+.tab button {
+    background-color: inherit;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 16px 32px;
+    font-size: 18px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #333;
+    transition: background-color 0.3s, color 0.3s;
+    letter-spacing: 1px;
+    border-radius: 8px 8px 0 0;
+}
+
+.tab button:hover {
+    color: #333;
+}
+
+.tab button.active {
+    border-bottom: 1px solid #d32f2f;
+    color: white;
+}
+
+.tabcontent {
+    display: none;
+    padding: 30px;
+    border-radius: 8px;
+    width: 80%;
+    max-width: 800px;
+    margin: 20px auto;
+}

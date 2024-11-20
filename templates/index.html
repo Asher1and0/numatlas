@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NumAtlas</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='tabs.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="icon" href="../static/favicon.png">
+</head>
+
+<body>
+
+    <nav>
+        <ul>
+            <li><a class="logo"><b>NumAtlas</b></a></li>
+            <li class="active"><a href="#">Home</a></li>
+            <li><a href="#">Pricing</a></li>
+            <li><a href="#">About</a></li>
+        </ul>
+
+        <ul>
+            <li class="sign"><a href="/logout">Log out</a></li>
+        </ul>
+
+    </nav>
+
+    <center class="content">
+
+        <h2 class="logo">NumAtlas</h2>
+        <h1 style="margin-bottom: 10rem;">The ultimate <b
+                style="background: linear-gradient(180deg, #cf362d, #84241d);text-transform: uppercase;color: #fff;padding: 0 5px;border-radius: 3px;">custom
+                API</b> tool for phone<br> and ip reverse lookup</h1>
+
+        <!-- Tab Navigation -->
+        <div class="tab" id="search">
+            <button class="tablinks active" onclick="openTab(event, 'Phone')">Phone Number</button>
+            <button class="tablinks" onclick="openTab(event, 'IP')">IP Address/Domain</button>
+        </div>
+
+        <!-- Phone Number Lookup Tab -->
+        <div id="Phone" class="tabcontent" style="display: block;">
+            <h3>Phone Number Details</h3>
+            <form method="POST">
+                <label for="phone_number">Enter Phone Number (in international format, e.g., +12812500247):</label><br>
+                <input type="text" id="phone_number" name="phone_number" required><br>
+
+                <label for="captcha">Solve {{ captcha_question }}</label><br>
+                <input type="text" id="captcha" name="captcha" required><br>
+
+                <button type="submit">Get Phone Details</button>
+            </form>
+
+            {% if phone_details %}
+            <div class="result">
+                <h3>Phone Number Details:</h3>
+                <pre>{{ phone_details }}</pre>
+                <h3>OpenStreetMap Data:</h3>
+                <pre>{{ osm_data }}</pre>
+            </div>
+            {% if lat and lon %}
+            <div id="map" style="height: 400px;">Map will be fixed soon</div>
+            <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+            <script>
+                var map = L.map('map').setView([{{ lat }}, { { lon } }], 6);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+                L.marker([{{ lat }}, {{ lon }}]).addTo(map)
+                    .bindPopup("Coordinates: {{ lat }}, {{ lon }}")
+                    .openPopup();
+            </script>
+            {% endif %}
+            {% endif %}
+        </div>
+
+        <!-- IP Address Lookup Tab -->
+        <div id="IP" class="tabcontent">
+            <h3>IP or Domain Lookup</h3>
+            <form method="POST">
+                <label for="ip_query">Enter IP Address or Domain Name (e.g., 8.8.8.8 or google.com):</label><br>
+                <input type="text" id="ip_query" name="ip_query" required><br>
+
+                <label for="captcha">Solve {{ captcha_question }}</label><br>
+                <input type="text" id="captcha" name="captcha" required><br>
+
+                <button type="submit">Get IP Info</button>
+            </form>
+
+            {% if ip_info %}
+            <div class="result">
+                <h3>IP Information:</h3>
+                <pre>{{ ip_info }}</pre>
+            </div>
+            {% if lat and lon %}
+            <div id="map" style="height: 400px;">Map will be fixed soon</div>
+            <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+            <script>
+                var map = L.map('map').setView([{{ lat }}, { { lon } }], 6);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+                L.marker([{{ lat }}, {{ lon }}]).addTo(map)
+                    .bindPopup("Coordinates: {{ lat }}, {{ lon }}")
+                    .openPopup();
+            </script>
+            {% endif %}
+            {% endif %}
+        </div>
+
+
+        <b>Why you should use NumAtlas</b>
+        <p>↓</p>
+
+        <div class="row">
+            <div class="column">
+                <h2>We do not log your queries
+                </h2>
+                <p>Because we know your investigations are sensitive, we do not save any of your requests and results
+                </p>
+            </div>
+            <div class="column">
+                <h2>We do not notify the target
+                </h2>
+                <p>We only implement api techniques that do not send a notification to the target</p>
+            </div>
+            <div class="column">
+                <h2>We do not show false positives
+                </h2>
+                <p>Only real-time results from cell phone carriers, allowing you to save time on your investigations</p>
+            </div>
+        </div>
+
+        <a href="#search"><button style="width: 12%;">Try NumAtlas</button></a>
+    </center>
+
+    <div class="ranks">
+        <h1><b>Join the ranks of Epieos</b></h1>
+        <p style="padding-bottom: 2rem;">Trusted by thousands, including enterprises, organizations<br>
+            & Law Enforcements</p>
+        <img src="../static/yettel.png" alt="">
+        <img src="../static/vodafone.png" alt=""><br>
+        <img src="../static/vivacom.png" alt="">
+        <img src="../static/verizon.png" alt="">
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+
+        // Automatically load the correct tab if it was previously active (e.g., IP or Phone)
+        $(document).ready(function () {
+            var activeTab = sessionStorage.getItem("activeTab");
+            if (activeTab) {
+                $("#" + activeTab).trigger("click");
+            }
+        });
+
+        // Save active tab on click to sessionStorage to maintain state
+        $(".tablinks").click(function () {
+            sessionStorage.setItem("activeTab", $(this).text().trim());
+        });
+    </script>
+
+    <footer>
+        <ul>
+            <li><a href="#">About us</a></li>
+            <li><a href="#">Privacy</a></li>
+            <li><a href="#">Terms</a></li>
+            <li><a href="#">Accessibility</a></li>
+        </ul>
+        <p>This site is protected by DeltaGuard and its
+            <a href="#">Privacy Policy</a> and <a href="#">Terms of Service</a> apply.
+            © 2023-2024, All Rights Reserved
+        </p>
+    </footer>
+
+</body>
+
+</html>
